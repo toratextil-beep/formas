@@ -26,11 +26,14 @@ fetch(design.svgFile)
   .then((svgText) => {
     svgContainer.innerHTML = svgText;
 
-    // Guardamos el color original de cada zona como punto de partida
+    // Guardamos el color original de cada zona como punto de partida.
+    // Si el color viene de una clase CSS (típico al exportar desde
+    // Illustrator), lo leemos con getComputedStyle en vez del atributo.
     design.zones.forEach((zone) => {
       const el = document.getElementById(zone.id);
       if (el) {
-        zoneColors[zone.id] = el.getAttribute("fill") || "#000000";
+        const target = el.tagName.toLowerCase() === "g" ? el.querySelector("*") : el;
+        zoneColors[zone.id] = target ? getComputedStyle(target).fill : "#000000";
       }
     });
 
@@ -74,17 +77,24 @@ function buildSwatches() {
 }
 
 // 4. Aplicar el color elegido a la zona del SVG
+//
+// Nota: los archivos que exporta Illustrator suelen definir el color
+// con una "clase" de CSS (algo como class="cls-3") en vez de un
+// atributo fill="..." directo. Si solo cambiáramos el atributo fill,
+// esa clase CSS seguiría ganando y no se vería el cambio. Por eso acá
+// además borramos la clase y aplicamos el color como estilo directo.
+function paintElement(el, hex) {
+  el.removeAttribute("class");
+  el.style.setProperty("fill", hex, "important");
+}
+
 function applyColor(zoneId, hex) {
   zoneColors[zoneId] = hex;
   const el = document.getElementById(zoneId);
   if (el) {
-    if (el.tagName.toLowerCase() === "g") {
-      // si la zona es un grupo (varias formas), pintamos todo lo de adentro
-      el.querySelectorAll("*").forEach((child) => child.setAttribute("fill", hex));
-      el.setAttribute("fill", hex);
-    } else {
-      el.setAttribute("fill", hex);
-    }
+    paintElement(el, hex);
+    // si la zona es un grupo (varias formas adentro), pintamos cada una
+    el.querySelectorAll("*").forEach((child) => paintElement(child, hex));
   }
 }
 

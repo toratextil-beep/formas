@@ -28,18 +28,21 @@ const CATALOG = {
 
   designs: [
     {
-      id: "design-01",
-      name: "Bibliothèque",
-      svgFile: "designs/design-01.svg",
-      description: "Diseño geométrico con medallón central, inspirado en la paleta maximalista editorial.",
+      id: "diseno-1",
+      name: "Diseño 1",
+      svgFile: "designs/1.svg",
+      description: "Tu primer diseño, vectorizado desde Illustrator. Revisá que los nombres de zona (abajo) coincidan con las partes reales del dibujo, y cambialos si hace falta.",
 
       // Las "zonas" son los id= que están adentro del archivo SVG.
-      // "label" es el nombre que va a ver el cliente.
+      // En tu diseño, Illustrator les puso estos nombres automáticamente
+      // (vienen de las capas que tenías en Photoshop). "label" es el
+      // nombre en criollo que va a ver el cliente en el sitio.
       zones: [
-        { id: "rug-field", label: "Fondo" },
-        { id: "rug-border", label: "Borde" },
-        { id: "rug-corners", label: "Esquinas" },
-        { id: "rug-medallion", label: "Medallón" },
+        { id: "_1_Imagen", label: "Contorno" },
+        { id: "_2_Imagen", label: "Borde" },
+        { id: "_5_Imagen", label: "Fondo" },
+        { id: "_4_Imagen", label: "Detalles claros" },
+        { id: "_3_Imagen", label: "Medallón" },
       ],
 
       // Paletas de colores que el cliente puede aplicar a cada zona.
